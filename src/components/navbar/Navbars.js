@@ -1,22 +1,37 @@
 import React, { useState, useContext } from 'react'
-import { Navbar, Container, Nav, Button } from 'react-bootstrap'
+import { Navbar, Container, Nav, Button, Badge } from 'react-bootstrap'
 import Avatar from 'react-avatar'
 import { Link, useNavigate } from 'react-router-dom'
+import { useQuery } from "react-query"
 
 import Logo from '../../assets/image/LogoWaysbook.png'
 import IconProfile from '../../assets/image/IconProfile.png'
 import IconComplain from '../../assets/image/IconComplain.png'
 import IconLogout from '../../assets/image/IconLogout.png'
 import IconAddBook from '../../assets/image/IconAddBook.png'
+import IconCart from '../../assets/image/IconCart.png'
 import Login from '../modal/Login'
 import Register from '../modal/Register'
 import { UserContext } from '../../context/userContext'
+import { API } from '../../config/api'
 
 function Navbars() {
     let navigate = useNavigate()
 
     const [state, dispatch] = useContext(UserContext)
-    console.log('state usercontext', state);
+    const [carts, setCarts] = useState([]);
+
+    let { data: profile } = useQuery('profileCache', async () => {
+        const response = await API.get('/profile');
+        // console.log(response.data.data);
+        return response.data.data;
+    })
+
+    let { data: cart } = useQuery('cartsCache', async () => {
+        const response = await API.get('/carts');
+        console.log(response);
+        return response.data.getCart;
+    })
 
     const [isClickLogin, setIsClickLogin] = useState(false)
     const [isClickRegister, setIsClickRegister] = useState(false)
@@ -74,6 +89,18 @@ function Navbars() {
                             <Navbar.Toggle aria-controls="basic-navbar-nav" />
                             <Navbar.Collapse id="basic-navbar-nav">
                                 <Nav className="ms-auto">
+                                    <Nav.Item>
+                                        <div>
+                                            <Link to="/cart">
+                                                <img src={IconCart} alt="" />
+                                                {cart.length > 0 && (
+                                                    <Badge bg="danger" pill className="cartBadge">
+                                                        {cart.length > 9 ? "+9" : cart.length}
+                                                    </Badge>
+                                                )}
+                                            </Link>
+                                        </div>
+                                    </Nav.Item>
                                     {/* Icon User with DropDown */}
                                     <Nav.Item className='ms-3 avatarIcon'>
                                         <div className='dropdown'>
@@ -88,13 +115,13 @@ function Navbars() {
                                                     color="#3A3A3A"
                                                     name={state.user.name}
                                                     size="50"
-                                                    src="https://e7.pngegg.com/pngimages/565/454/png-clipart-user-computer-icons-anonymity-head-miscellaneous-face.png"
+                                                    src={profile?.avatar}
                                                     round={true}
                                                 />
                                             </button>
                                             <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenu">
                                                 <li>
-                                                    <Link to="/profile">
+                                                    <Link to="/profile" style={{ textDecoration: "none" }}>
                                                         <button className="dropdown-item textTitle fs-5" type="button">
                                                             <img src={IconProfile} style={{ width: "25px", height: "25px" }} alt="IconProfile" />
                                                             {" "}Profile
@@ -102,7 +129,7 @@ function Navbars() {
                                                     </Link>
                                                 </li>
                                                 <li>
-                                                    <Link to="/complain-user">
+                                                    <Link to="/complain-user" style={{ textDecoration: "none" }}>
                                                         <button className="dropdown-item textTitle fs-5" type="button">
                                                             <img src={IconComplain} style={{ width: "25px", height: "25px" }} alt="IconComplain" />
                                                             {" "}Complain
@@ -156,7 +183,7 @@ function Navbars() {
                                             </button>
                                             <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenu">
                                                 <li>
-                                                    <Link to="/add-book">
+                                                    <Link to="/add-book" style={{ textDecoration: "none" }}>
                                                         <button className="dropdown-item textTitle fs-5" type="button">
                                                             <img src={IconAddBook} style={{ width: "25px", height: "25px" }} alt="IconAddBook" />
                                                             {" "}Add Book
@@ -164,7 +191,7 @@ function Navbars() {
                                                     </Link>
                                                 </li>
                                                 <li>
-                                                    <Link to="/complain-admin">
+                                                    <Link to="/complain-admin" style={{ textDecoration: "none" }}>
                                                         <button className="dropdown-item textTitle fs-5" type="button">
                                                             <img src={IconComplain} style={{ width: "25px", height: "25px" }} alt="IconComplain" />
                                                             {" "}Complain
