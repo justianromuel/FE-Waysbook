@@ -43,19 +43,21 @@ function DetailBook() {
         }
     };
 
-
-    useEffect(() => {
-        setDtlBook(book)
-
+    const getPurchased = async () => {
         try {
-            const response2 = API.get('/purchased/' + id);
-            console.log(response2);
-            if (response2.data.purBook) {
+            const response = await API.get('/purchased/' + id)
+            // console.log(response);
+            if (response.data.purBook) {
                 setIsBuy(true)
             }
         } catch (error) {
             console.log(error);
         }
+    }
+
+    useEffect(() => {
+        setDtlBook(book)
+        getPurchased()
     }, []);
 
     return (

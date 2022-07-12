@@ -29,7 +29,7 @@ function Navbars() {
 
     let { data: cart } = useQuery('cartsCache', async () => {
         const response = await API.get('/carts');
-        console.log(response);
+        // console.log(response);
         return response.data.getCart;
     })
 
