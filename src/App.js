@@ -13,6 +13,8 @@ import Profile from "./pages/User/Profile";
 
 import { UserContext } from './context/userContext';
 import { API, setAuthToken } from './config/api';
+import ComplainUser from "./pages/User/ComplainUser";
+import ComplainAdmin from "./pages/Admin/ComplainAdmin";
 
 if (localStorage.token) {
   setAuthToken(localStorage.token)
@@ -81,7 +83,9 @@ function App() {
       <Route path="/cart" element={<Cart />} />
       <Route path="/profile" element={<Profile />} />
       <Route path="/list-transaction" element={<ListTransaction />} />
-      <Route path="add-book" element={<AddBook />} />
+      <Route path="/add-book" element={<AddBook />} />
+      <Route path="/complain-user" element={<ComplainUser />} />
+      <Route path="/complain-admin" element={<ComplainAdmin />} />
     </Routes>
   );
 }

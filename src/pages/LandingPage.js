@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext, useState } from 'react'
 import { Button, Col, Container, Row } from "react-bootstrap";
 import rupiahFormat from "rupiah-format";
 import { useQuery } from 'react-query'
@@ -11,8 +11,12 @@ import Navbars from "../components/navbar/Navbars";
 import bgLeft from "../assets/image/BgLeft.png";
 import bgRight from "../assets/image/BgRight.png";
 import { API } from '../config/api';
+import { UserContext } from '../context/userContext';
 
 function LandingPage() {
+    const [state] = useContext(UserContext)
+    // console.log(state);
+
     let { data: promobooks } = useQuery('promobooksCache', async () => {
         const response = await API.get('/promo-books');
         // console.log(response);
@@ -59,26 +63,50 @@ function LandingPage() {
                             <div key={index}>
                                 <Row className="rowCarousel">
                                     <Col md="4" className="colCarousel">
-                                        <Link to={`/detail-book/${item.item.id}`}>
+                                        {state.isLogin ? (
+                                            <Link to={`/detail-book/${item.item.id}`}>
+                                                <img
+                                                    className="d-block imgCarousel"
+                                                    src={item.bookImg}
+                                                    alt=""
+                                                />
+                                            </Link>
+                                        ) : (
                                             <img
                                                 className="d-block imgCarousel"
                                                 src={item.bookImg}
                                                 alt=""
                                             />
-                                        </Link>
+                                        )}
                                     </Col>
                                     <Col md="4" className="promoBooks">
-                                        <h5 className='textTitle'>
-                                            {item.item.title}
-                                        </h5>
+                                        {state.isLogin ? (
+                                            <Link style={{ textDecoration: "none", color: "black" }} to={`/detail-book/${item.item.id}`}>
+                                                <h5 className='textTitle'>
+                                                    {item.item.title}
+                                                </h5>
+                                            </Link>
+                                        ) : (
+                                            <h5 className='textTitle'>
+                                                {item.item.title}
+                                            </h5>
+                                        )}
                                         <h6>By: {item.item.author}</h6>
                                         <p>{item.item.desc.slice(0, 70) + "..."}</p>
                                         <h5 className="text-success">
                                             {rupiahFormat.convert(item.item.price)}
                                         </h5>
-                                        <Button className="btnCart">
-                                            Add to Cart
-                                        </Button>
+                                        {state.isLogin ? (
+                                            <Link style={{ textDecoration: "none", color: "black" }} to={`/detail-book/${item.item.id}`}>
+                                                <Button className="btnCart">
+                                                    Add to Cart
+                                                </Button>
+                                            </Link>
+                                        ) : (
+                                            <Button className="btnCart" disabled>
+                                                Add to Cart
+                                            </Button>
+                                        )}
                                     </Col>
                                 </Row>
                             </div>
@@ -92,15 +120,27 @@ function LandingPage() {
                         {/* List Book */}
                         {books?.map((item, index) => (
                             <Col md="2" className="me-5">
-                                <>
-                                    <img
-                                        className="imgListBook"
-                                        src={item.bookImg}
-                                        alt="" />
-                                    <h3>{item.title}</h3>
-                                    <h6>By: {item.author}</h6>
-                                    <h5 className="text-success">{rupiahFormat.convert(item.price)}</h5>
-                                </>
+                                {state.isLogin ? (
+                                    <>
+                                        <Link style={{ textDecoration: "none", color: "black" }} to={`/detail-book/${item.id}`}>
+                                            <img
+                                                className="imgListBook"
+                                                src={item.bookImg}
+                                                alt="" />
+                                            <h5 className='textTitle'>{item.title}</h5>
+                                        </Link>
+                                    </>
+                                ) : (
+                                    <>
+                                        <img
+                                            className="imgListBook"
+                                            src={item.bookImg}
+                                            alt="" />
+                                        <h5 className='textTitle'>{item.title}</h5>
+                                    </>
+                                )}
+                                <h6>By: {item.author}</h6>
+                                <h6 className="text-success">{rupiahFormat.convert(item.price)}</h6>
                             </Col>
                         ))}
                     </Row>

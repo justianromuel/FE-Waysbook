@@ -69,7 +69,7 @@ function Cart() {
             e.preventDefault();
 
             const response = await API.post('/transaction');
-            console.log("response", response);
+            // console.log("response", response);
             const token = response.data.payment.token;
             // console.log("ini cek token:", token);
 

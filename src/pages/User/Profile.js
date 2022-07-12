@@ -46,7 +46,7 @@ function Profile() {
 
     //     if (e.target.type === "file") {
     //         let url = URL.createObjectURL(e.target.files[0])
-    //         setPreview
+    //         setPreview()
     //     }
     // }
 

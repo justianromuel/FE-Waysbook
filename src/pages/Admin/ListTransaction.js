@@ -1,15 +1,23 @@
 import React from 'react'
 import { Col, Container, Row, Table } from 'react-bootstrap';
 import rupiahFormat from 'rupiah-format';
+import { useQuery } from 'react-query'
 
 import bgLeft from "../../assets/image/BgLeft.png";
 import bgRight from "../../assets/image/BgRight.png";
 import Navbars from '../../components/navbar/Navbars';
+import { API } from '../../config/api';
 
 function ListTransaction() {
+
+    let { data: transactions } = useQuery('transactionsCache', async () => {
+        const response = await API.get('/transactions');
+        console.log(response);
+        return response.data.transactions;
+    });
+
     return (
         <>
-
             {/* background image */}
             <img src={bgLeft} className="bgImage" alt="" />
             <img src={bgRight} className="bgImageR" alt="" />
@@ -31,17 +39,19 @@ function ListTransaction() {
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>1</td>
-                                    <td>Name Buyer</td>
-                                    <td>Books</td>
-                                    <td className={`text-success`}>
-                                        {rupiahFormat.convert(200000)}
-                                    </td>
-                                    <td className={`text-success`}>
-                                        Success
-                                    </td>
-                                </tr>
+                                {transactions?.map((item, index) => (
+                                    <tr>
+                                        <td>{index + 1}</td>
+                                        <td>{item.nameBuyer}</td>
+                                        <td>{item.products}</td>
+                                        <td className={`text-success`}>
+                                            {rupiahFormat.convert(item.total)}
+                                        </td>
+                                        <td className={`text-success`}>
+                                            {item.status}
+                                        </td>
+                                    </tr>
+                                ))}
                             </tbody>
                         </Table>
                     </Col>

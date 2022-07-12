@@ -4,11 +4,8 @@ import { useMutation, useQuery } from 'react-query'
 
 import { UserContext } from '../../context/userContext';
 import { API } from '../../config/api';
-import { useNavigate } from 'react-router-dom';
 
 function Profiles(props) {
-    let navigate = useNavigate()
-
     const [state, dispatch] = useContext(UserContext)
     const [message, setMessage] = useState(null)
     const [show, setShow] = useState(props.isOpen)
@@ -80,7 +77,6 @@ function Profiles(props) {
             const response = await API.patch('/profile', formData, config)
             console.log(response)
             setShow(false)
-            navigate('/profile')
         } catch (error) {
             console.log(error)
         }
@@ -115,10 +111,10 @@ function Profiles(props) {
                                 type="file"
                                 className="form-control bg-transparent border-0 text-white"
                                 id="upload"
-                                name="image"
+                                name="avatar"
                                 accept='image/*'
-                                hidden
                                 onChange={handleChange}
+                                hidden
                             />
                             <label for="upload" className="labelUploadProfile">
                                 Upload File
